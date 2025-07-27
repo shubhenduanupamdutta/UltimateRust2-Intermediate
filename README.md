@@ -147,3 +147,7 @@ You can publish your crate to `crates.io`, rust communities, package registry. *
   - `categories` Up to 5 applicable categories from the `All valid Category Slugs` page on crates.io
 
 - **Step 5:** - Then `cargo publish` can be used to publish. It will do compile checks, build docs, check versions if nothing conflicts, it will publish. It will also publish documentation on docs.rs.
+
+## Links to other documentation
+
+- ### [Iterators](./iterators/Iterators.md)
