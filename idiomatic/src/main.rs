@@ -8,12 +8,10 @@
 
 // Challenge: Clippy doesn't find *everything*. What else would you change to make this code better?
 
-use std::f64::consts::PI;
-
 fn count_to_5() -> i32 {
     let mut number = 0;
     loop {
-        if number > PI as i32 && number > 5 {
+        if number > 5 {
             break;
         }
         number += 1;
