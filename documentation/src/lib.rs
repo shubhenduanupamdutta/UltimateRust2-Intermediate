@@ -1,3 +1,10 @@
+//!A pumpkin is a cultivated winter squash in the genus Cucurbita. The term is most commonly
+//! applied to round, orange-colored squash varieties, but does not possess a scientific definition.
+//! It may be used in reference to many different squashes of varied appearance and belonging to
+//! multiple species in the Cucurbita genus
+//! 
+//! ![French Market Pumpkins](https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/FrenchMarketPumpkinsB.jpg/700px-FrenchMarketPumpkinsB.jpg)
+
 // 1. Thank you for volunteering to document our pumpkin library! Let's start by grabbing the first
 // paragraph from https://en.wikipedia.org/wiki/Pumpkin and pasting it as our module-level
 // documentation. Hint: Use inner-documentation comments.
