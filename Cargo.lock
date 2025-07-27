@@ -3,5 +3,9 @@
 version = 4
 
 [[package]]
+name = "documentation"
+version = "1.0.0"
+
+[[package]]
 name = "idiomatic"
 version = "1.0.0"
