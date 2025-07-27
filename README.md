@@ -111,3 +111,5 @@ impl Puzzle {
     }
 }
 ```
+
+### To document private items you can use `--document-private-items` flag
