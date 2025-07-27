@@ -113,3 +113,37 @@ impl Puzzle {
 ```
 
 ### To document private items you can use `--document-private-items` flag
+
+## Publishing
+
+You can publish your crate to `crates.io`, rust communities, package registry. **Note that anything you publish will be permanent.** Package names need to be unique, at least as of today on 27-July-2025.
+
+### Steps to publish to your package
+
+- **Step 1:** Login to crates.io via GitHub.
+- **Step 2:** In account settings, API Access, generate new token using `New Token` button.
+- **Step 3:** Then you run `cargo login` and pass your generated token. This will take care of authentication process.
+- **Step 4:** Configure your project/library for publishing
+
+  ### Strongly Recommended Settings Before Publishing
+
+  ```toml
+  [package]
+  name = "rusty_engine"
+  version = "2.0.0"
+  description = "Some Description"
+  edition = "2024"
+  homepage = "<usually link to your website for the project, you can also use github repo>"
+  repository = "https://github.com/CleanCut/rusty_engine"
+  readme = "README.md"
+  keywords = ["game", "engine", "graphics", "audio", "rusty"]
+  categories = ["game-engine"]
+  license = "MIT OR Apache-2.0"
+  ```
+
+  Publishing can be done with only 2 of the attributes, `name` and `version`
+
+  - `keywords` 5 words/tags which can be used to improve ranking on crates.io
+  - `categories` Up to 5 applicable categories from the `All valid Category Slugs` page on crates.io
+
+- **Step 5:** - Then `cargo publish` can be used to publish. It will do compile checks, build docs, check versions if nothing conflicts, it will publish. It will also publish documentation on docs.rs.
