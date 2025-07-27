@@ -28,6 +28,6 @@ mod test {
     use super::*;
     #[test]
     fn test_counting() {
-        assert_eq!(count_to_5() == 5, true);
+        assert!(count_to_5() == 5);
     }
 }

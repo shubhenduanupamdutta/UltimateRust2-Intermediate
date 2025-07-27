@@ -78,7 +78,7 @@ pub const PUZZLE_PIECES: u32 = 42;
 
 You can also use `#[doc]` attributes to write documentation for items. This is useful when you want to write documentation for an item that is not a function, struct, enum, or module. For example, you can use it to document a constant or a type alias.
 
-Rust documentation should always start with a simple description/summary of what the item does. It should be concise and to the point. The first sentence should be a summary of the item, and the rest of the comment can provide additional information, such as examples or usage instructions. They can inclue headers, lists, and code blocks, just like doc comments.
+Rust documentation should always start with a simple description/summary of what the item does. It should be concise and to the point. The first sentence should be a summary of the item, and the rest of the comment can provide additional information, such as examples or usage instructions. They can include headers, lists, and code blocks, just like doc comments.
 
 One thing to note is about **intradoc links**. They are used to link to other items in your code. They are written using the `[` and `]` syntax. But they must be in the scope. But if it is not in scope, then you can use the absolute path.
 
