@@ -39,6 +39,8 @@ pub struct Pumpkin {
 // can't be used for pie. :'-(
 
 impl Pumpkin {
+    /// This method smashes the pumpkin, i.e. it removes the pumpkin. After using this, pumpkin will
+    /// not be available.
     pub fn smash(self) {}
 }
 
