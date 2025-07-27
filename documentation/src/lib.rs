@@ -2,7 +2,7 @@
 //! applied to round, orange-colored squash varieties, but does not possess a scientific definition.
 //! It may be used in reference to many different squashes of varied appearance and belonging to
 //! multiple species in the Cucurbita genus
-//! 
+//!
 //! ![French Market Pumpkins](https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/FrenchMarketPumpkinsB.jpg/700px-FrenchMarketPumpkinsB.jpg)
 
 // 1. Thank you for volunteering to document our pumpkin library! Let's start by grabbing the first
@@ -23,9 +23,9 @@
 // - Document the "orangeness" field, explaining that it is a number from 8 to 27
 
 /// Big Orange Thing
-/// 
+///
 /// # Recipes
-/// 
+///
 /// Recipes are in progress, and will be coming soon
 #[derive(Debug)]
 pub struct Pumpkin {
@@ -47,6 +47,9 @@ impl Pumpkin {
 // 5. Document that BURNT_ORANGE is for the "orangeness" field in the Pumpkin struct.
 // - Link to the Pumpkin struct in your description
 
+/// Constant for a specific shade of orange
+///
+/// This is to be usually used to create the Pumpkin [`Pumpkin`]
 pub const BURNT_ORANGE: i32 = 13;
 
 // Challenge: Find the option to pass to `cargo doc` so that documentation for this private item
