@@ -1,4 +1,4 @@
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub enum Cake {
     Chocolate,
     MapleBacon,
@@ -10,6 +10,22 @@ pub struct Party {
     pub at_restaurant: bool,
     pub num_people: u8,
     pub cake: Cake,
+}
+
+impl Default for Party {
+    fn default() -> Self {
+        Party {
+            at_restaurant: true,
+            num_people: 8,
+            cake: Cake::Chocolate,
+        }
+    }
+}
+
+impl PartialEq for Party {
+    fn eq(&self, other: &Self) -> bool {
+        self.cake == other.cake
+    }
 }
 
 fn main() {
@@ -46,7 +62,7 @@ fn main() {
     // Hint: If you get stuck, there is an example at
     // https://doc.rust-lang.org/std/default/trait.Default.html#how-can-i-implement-default
 
-    // println!("The default Party is\n{:#?}", Party::default());
+    println!("The default Party is\n{:#?}", Party::default());
 
     // 4. You prefer Maple Bacon cake. Use "struct update syntax" to create a Party with `cake`
     // set to `Cake::MapleBacon`, but the rest of the values are default.
@@ -54,10 +70,11 @@ fn main() {
     // Hint: The trick to struct update syntax is specifying the value(s) you want to customize
     // first and then ending the struct with `..Default::default()` -- but no comma after that!
 
-    // let party = Party {
-    //     ...
-    // };
-    // println!("Yes! My party has my favorite {:?} cake!", party.cake);
+    let party = Party {
+        cake: Cake::MapleBacon,
+        ..Default::default()
+    };
+    println!("Yes! My party has my favorite {:?} cake!", party.cake);
 
     // 5. Parties are "equal" if they have the same cake.
     // - Derive the PartialEq trait for the Cake enum so Cakes can be compared.
@@ -65,14 +82,14 @@ fn main() {
     // then they are equal, no matter the location or number of attendees at the party.
     // - Uncomment and run the code below.
 
-    // let other_party = Party {
-    //     at_restaurant: false,
-    //     num_people: 235,
-    //     cake: Cake::MapleBacon,
-    // };
-    // if party == other_party {
-    //     println!("Your party is just like mine!");
-    // }
+    let other_party = Party {
+        at_restaurant: false,
+        num_people: 235,
+        cake: Cake::MapleBacon,
+    };
+    if party == other_party {
+        println!("Your party is just like mine!");
+    }
 
     // Challenge: You would like to be able to pass a Party struct into the smell_cake() function
     // which takes a type T which implements the Into<Cake> trait.
