@@ -6,8 +6,8 @@ fn main() {
     // number multiplied by itself), and assign the closure to the "square" variable. Then run the
     // code and make sure it works.
 
-    // let square = ...
-    // println!("5 squared is {}", square(5));
+    let square = |x| x * x;
+    println!("5 squared is {}", square(5));
 
     // 2. Uncomment the code below.  Finish the .map() iterator adaptor call by passing it a closure
     // which takes a tuple of two integers as a parameter, and returns a tuple with the first
