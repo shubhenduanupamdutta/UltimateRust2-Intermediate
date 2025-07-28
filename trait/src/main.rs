@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub enum Cake {
     Chocolate,
     MapleBacon,
@@ -25,11 +25,11 @@ fn main() {
     // function instead of moved.
     // - Hint: You may need to derive another trait in order to be able to derive the Copy trait
 
-    // match cake {
-    //     Cake::Chocolate => println!("The name's Chocolate. Dark...Chocolate."),
-    //     Cake::MapleBacon => println!("Dreams do come true!"),
-    //     Cake::Spice => println!("Great, let's spice it up!"),
-    // }
+    match cake {
+        Cake::Chocolate => println!("The name's Chocolate. Dark...Chocolate."),
+        Cake::MapleBacon => println!("Dreams do come true!"),
+        Cake::Spice => println!("Great, let's spice it up!"),
+    }
 
     // 3. Uncomment the println below. It doesn't work since the Party struct doesn't implement the
     // Debug or Default traits.
