@@ -151,3 +151,5 @@ You can publish your crate to `crates.io`, rust communities, package registry. *
 ## Links to other documentation
 
 - ### [Iterators](./iterators/Iterators.md)
+
+- ### [Closures](./iterators/Closures.md)
