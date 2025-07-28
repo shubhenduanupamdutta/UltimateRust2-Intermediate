@@ -17,7 +17,7 @@ fn main() {
     let pairs = vec![(0, 1), (2, 3), (4, 5)];
     pairs
         .into_iter()
-        .map(|(x, y)| (x+1, y))
+        .map(|(x, y)| (x + 1, y))
         .for_each(|t| println!("{:?}", t));
 
     // 3. Uncomment the code below. There is a mutable vector named `numbers`. Use an iterator over
@@ -39,13 +39,27 @@ fn main() {
     //
     // Hint: .to_uppercase() is a method on `str` which returns a String
 
-    // let words = vec!["autobot", "beach", "car", "decepticon", "energon", "frothy"];
-    // let transformed...  // do the stuff here
-    // println!("Transformed: {:?}", transformed);
-
+    let words = vec!["autobot", "beach", "car", "decepticon", "energon", "frothy"];
+    let transformed = words
+        .into_iter()
+        .filter(|w| !w.contains("h"))
+        .map(|w| w.to_uppercase())
+        .collect::<Vec<_>>();
+    println!("Transformed: {:?}", transformed);
     // Challenge:
     //
     // - Rewrite the code in #2 as a for loop
     // - Rewrite the code in #3 in functional style (without a for loop).  Hint: There are multiple
     // ways to accomplish this, but they all end with an iterator consumer.
+
+    // Code in 2 for a loop
+    let pairs = vec![(0, 1), (2, 3), (4, 5)];
+    for pair in pairs {
+        println!("{:?}", (pair.0 + 1, pair.1))
+    }
+
+    // Code 3 without for loop
+    let mut numbers = vec![1, 2, 3, 4];
+    numbers.iter_mut().for_each(|x| *x *= 3);
+    println!("{:?}", numbers); // should print [3, 6, 9, 12]
 }
