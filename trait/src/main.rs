@@ -28,6 +28,18 @@ impl PartialEq for Party {
     }
 }
 
+impl From<Party> for Cake {
+    fn from(value: Party) -> Self {
+        value.cake
+    }
+}
+
+impl From<&Party> for Cake {
+    fn from(value: &Party) -> Self {
+        value.cake
+    }
+}
+
 fn main() {
     // 1. The code below doesn't work because Cake doesn't implement Debug.
     // - Derive the Debug trait for the Cake enum above so this code will work. Then, run the code.
@@ -97,13 +109,16 @@ fn main() {
     // - Implement `From<Party> for Cake` so that the function call below works.
     //
 
-    // smell_cake(party);
+    smell_cake(&party);
 
     // Challenge 2: Implement `From<&Party> for Cake` so that you can smell your cake without
     // consuming it. Change the code above to pass in a &party. Then uncomment and run the code
     // below. After all, you want to smell your cake and eat it, too!
 
-    // println!("Yum! I'm eating this cake: {:?}. Oops, I dropped it on the floor.", party.cake);
+    println!(
+        "Yum! I'm eating this cake: {:?}. Oops, I dropped it on the floor.",
+        party.cake
+    );
     // drop(cake);
 }
 
@@ -111,6 +126,6 @@ pub fn admire_cake(cake: Cake) {
     println!("What a nice {:?} cake! 🎂", cake);
 }
 
-// pub fn smell_cake<T: Into<Cake>>(something: T) {
-//     println!("Hmm...something smells like a {:?} cake!", something.into());
-// }
+pub fn smell_cake<T: Into<Cake>>(something: T) {
+    println!("Hmm...something smells like a {:?} cake!", something.into());
+}
