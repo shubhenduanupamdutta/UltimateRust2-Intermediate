@@ -13,3 +13,7 @@ version = "1.0.0"
 [[package]]
 name = "iterators"
 version = "1.0.0"
+
+[[package]]
+name = "traits"
+version = "1.0.0"

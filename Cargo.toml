@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = [ "documentation","idiomatic", "iterators"]
+members = [ "documentation","idiomatic", "iterators", "trait"]
 
 [workspace.package]
 version = "1.0.0"
