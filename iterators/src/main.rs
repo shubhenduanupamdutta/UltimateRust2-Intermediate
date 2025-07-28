@@ -14,22 +14,22 @@ fn main() {
     // integer incremented by 1, and the second integer left alone.  For example, if given the input
     // (0, 1), it should return (1, 1). Run the code and make sure it works.
 
-    // let pairs = vec![(0, 1), (2, 3), (4, 5)];
-    // pairs
-    //     .into_iter()
-    //     .map( ... )
-    //     .for_each(|t| println!("{:?}", t));
+    let pairs = vec![(0, 1), (2, 3), (4, 5)];
+    pairs
+        .into_iter()
+        .map(|(x, y)| (x+1, y))
+        .for_each(|t| println!("{:?}", t));
 
     // 3. Uncomment the code below. There is a mutable vector named `numbers`. Use an iterator over
     // mutable references to multiply each of the values in `numbers` by 3.
     // Hint 1: You'll need .iter_mut() -- bonus points if you use the shorter, syntactic sugar form!
     // Hint 2: `x` will be a mutable reference, so remember to dereference it to use it
 
-    // let mut numbers = vec![1, 2, 3, 4];
-    // for x in ... {
-    //     ... // multiply the value by 3 via the mutable reference x
-    // }
-    // println!("{:?}", numbers); // should print [3, 6, 9, 12]
+    let mut numbers = vec![1, 2, 3, 4];
+    for x in &mut numbers {
+        *x *= 3; // multiply the value by 3 via the mutable reference x
+    }
+    println!("{:?}", numbers); // should print [3, 6, 9, 12]
 
     // 4. Uncomment the code below.  Take the vector of words and
     // - Convert the vector into an iterator with .into_iter()
