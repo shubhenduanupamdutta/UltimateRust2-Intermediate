@@ -1,9 +1,11 @@
+#[derive(Debug)]
 pub enum Cake {
     Chocolate,
     MapleBacon,
     Spice,
 }
 
+#[derive(Debug)]
 pub struct Party {
     pub at_restaurant: bool,
     pub num_people: u8,
