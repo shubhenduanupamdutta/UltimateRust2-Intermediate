@@ -45,14 +45,14 @@ impl Dolphin {
         if self.age < 4 {
             Err(DolphinError::TooYoung)
         } else {
-            Ok(format!("Yippee, I'm doing a flip!"))
+            Ok("Yippee, I'm doing a flip!".to_string())
         }
     }
     pub fn shake_hands(&self) -> Result<String, DolphinError> {
         if self.hungry {
             Err(DolphinError::Hungry)
         } else {
-            Ok(format!("Nice to meet you, let's shake hands!"))
+            Ok("Nice to meet you, let's shake hands!".to_string())
         }
     }
 }

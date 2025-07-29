@@ -3,7 +3,6 @@
 use anyhow::Result;
 use errors::Dolphin; // 2a: Bring anyhow::Result into scope
                      // Silence some warnings so they don't distract from the exercise.
-#[allow(clippy::vec_init_then_push)]
 
 // (You already did #1 in lib.rs, right?)
 //
@@ -11,7 +10,7 @@ use errors::Dolphin; // 2a: Bring anyhow::Result into scope
 // - Bring anyhow::Result into scope with a `use` statement
 // - Have the play_time function return a `Result<Vec<String>>`. The vector of Strings will
 //   represent successful outcomes of various dolphin tricks.
-
+#[allow(clippy::vec_init_then_push)]
 fn play_time(dolphin: &Dolphin) -> Result<Vec<String>> {
     let mut responses = vec![];
     // 2b. Call the .say_your_name() method on `dolphin`, use `?` to unwrap the value, and push
@@ -28,7 +27,7 @@ fn play_time(dolphin: &Dolphin) -> Result<Vec<String>> {
     Ok(responses)
 }
 
-fn main() -> Result<()>{
+fn main() -> Result<()> {
     let dolphins = vec![
         Dolphin {
             name: "Augustinius".into(),
