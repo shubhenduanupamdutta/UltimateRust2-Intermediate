@@ -197,3 +197,117 @@ fn main() -> Result<()> {
 ```
 
 `Closure` inside `with_context` is used to provide additional context about the error, if it occurs. This is very useful for debugging, because it gives you more information about what went wrong. Closure is only called when error occurs, so we avoid overhead of allocating and formatting the string if everything goes well.
+
+---
+
+## [RustConf 2020 - Error handling Isn't All About Errors by Jane Lusby](https://www.youtube.com/watch?v=rAF8mLI0naQ)
+
+---
+
+### What is error handling?
+
+- Defining Errors
+- Propagating Errors and gathering context
+- Reacting to specific errors
+- Discarding Errors
+- Reporting errors and gathered context
+
+### The `Error` Trait
+
+`Error` trait fills three roles in rust:
+**1. Represents an open set of errors:** By converting any type that implements `Error` trait into an Error Trait Object. This is important for composing errors, because it allows us to expose our source errors via the Error trait regardless of their concrete type.
+**2. Reacting to specific errors in an open set:** It lets react to the specific error by trying to downcast the error to a specific type safely, rather than using `match` on the error type.
+**3. Provides an interface for reporters:**
+
+### Tools builtin and idiomatic to Rust
+
+| Way of Handling         | Recoverable           | Non-recoverable            |
+| ----------------------- | --------------------- | -------------------------- |
+| _Defining_              | Types and Traits      | `panic`                    |
+| _Propagating_           | `?`                   | `builtin`                  |
+| _Matching and Reacting_ | `match` or `downcast` | Please don't               |
+| _Discarding_            | `drop` or `unwrap`    | `catch_unwind` be cautious |
+| _Reporting_             | `Error` trait         | panic hook                 |
+
+### Definitions
+
+- **Error:** A description of why an operation failed.
+- **Context:** Any information relevant to an error or an error report that is not in itself an error.
+- **Error Report:** Printed representation of an error and all of its associated context.
+
+### The `Error` Trait in Rust Standard Library
+
+```rust
+// This is a simplified version of the Error trait
+pub trait Error: Debug + Display {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        None
+    }
+
+    fn backtrace(&self) -> Option<&Backtrace> {
+        None
+    }
+}
+```
+
+#### An Error using `Error` trait
+
+```rust
+#[derive(Debug)]
+struct DeserializeError;
+
+impl Display for DeserializeError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Failed to deserialize data")
+    }
+}
+
+impl std::error::Error for DeserializeError {}
+```
+
+We don't have a source or backtrace, for this error, so we don't implement those methods. But we can still use this error type in our code. If we did have a source or backtrace, we would implement those methods to return the appropriate values.
+
+#### An Error Reporter
+
+```rust
+fn report(error: &(dyn std::error::Error + 'static)) {
+    print!("Error:");
+
+    let errors = std::iter::successors(Some(error), |e| e.source());    // Iterate through the error chain, by calling `source()` method on each error.
+
+    for (idx, err) in errors.enumerate() {
+        print!("\n    {}: {}", idx, err);
+    }   // print each error in the chain, with its index.
+
+    if let Some(backtrace) = error.backtrace() {
+        print!("\n\nBacktrace: {}", backtrace);
+    }   // print the backtrace if it exists, A more complex report would have backtrace for each error in the chain. or the context if it exists.
+}
+```
+
+By separating the source and the error message, we move the responsibility of formatting away from the error itself, making it possible to get fancy. We could have the same error, print to a log in one line, but in terminal as many.
+
+### The Error Trait is restrictive
+
+- **Can only represent errors with a single source**
+- **Can only access three forms of context, _source_, _backtrace_ and _message_**
+
+### TIPS: Reporters
+
+- **Reporters almost always `impl From<E: Error>`**
+- **If they do they cannot implement `Error` themselves**
+- **Don't compose well.**
+
+### Open Source Libraries For Error Handling Breakdown
+
+| Handling            | Library                                              |
+| ------------------- | ---------------------------------------------------- |
+| _Defining_          | `thiserror`, `displaydoc`, `snafu`, `anyhow`, `eyre` |
+| _Propagating_       | `fehler`                                             |
+| _Gathering Context_ | `tracing-error`, `extract-err`                       |
+
+| _Matching and Reacting_ | `anyhow`, `eyre` |
+| _Discarding_ | Not yet known |
+| _Reporting_ | `anyhow`, `eyre` |
+
+Hooks library for _Reporting_ errors with `anyhow` and `eyre` are: `color-eyre`, `stable-eyre`, `jane-eyre`, `color-anyhow`
