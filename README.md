@@ -148,6 +148,18 @@ You can publish your crate to `crates.io`, rust communities, package registry. *
 
 - **Step 5:** - Then `cargo publish` can be used to publish. It will do compile checks, build docs, check versions if nothing conflicts, it will publish. It will also publish documentation on docs.rs.
 
+---
+
+## There are two definitions of crates in Rust
+
+---
+
+**1. crate = package:** Commonly used by people talking to people. Package can contain 0 or 1 library and any number of binaries. So libraries and binaries are in the same crate in a sense
+
+**2. crate = a library or binary:** This definition is used by rust language /compiler or cargo. So every library and binary is its own crate, even though they reside in the same package. In any of the technical documentation, this is the definition that is used.
+
+---
+
 ## Links to other documentation
 
 - ### [Iterators](./iterators/Iterators.md)
