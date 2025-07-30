@@ -1,6 +1,13 @@
 [workspace]
 resolver = "3"
-members = ["documentation", "errors", "idiomatic", "iterators", "testing", "trait"]
+members = [
+    "documentation",
+    "errors",
+    "idiomatic",
+    "iterators",
+    "testing",
+    "trait",
+]
 
 [workspace.package]
 version = "1.0.0"
@@ -53,3 +60,4 @@ overflow-checks = false
 [workspace.dependencies]
 anyhow = "1.0.98"
 thiserror = "2.0.12"
+criterion = { version = "0.7.0", features = ["html_reports"] }
