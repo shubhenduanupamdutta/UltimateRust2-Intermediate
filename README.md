@@ -157,3 +157,7 @@ You can publish your crate to `crates.io`, rust communities, package registry. *
 - ### [Traits](./trait/Traits.md)
 
 - ### [Errors](./errors/Errors.md)
+
+- ### [Testing](./testing/Testing.md)
+
+- ### [Benchmarks](./testing/Benchmarks.md)
