@@ -61,3 +61,4 @@ overflow-checks = false
 anyhow = "1.0.98"
 thiserror = "2.0.12"
 criterion = { version = "0.7.0", features = ["html_reports"] }
+log = "0.4.27"
