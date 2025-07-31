@@ -173,3 +173,5 @@ You can publish your crate to `crates.io`, rust communities, package registry. *
 - ### [Testing](./testing/Testing.md)
 
 - ### [Benchmarks](./testing/Benchmarks.md)
+
+- ### [Logging](./logging/Logging.md)
