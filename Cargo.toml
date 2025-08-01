@@ -4,7 +4,7 @@ members = [
     "documentation",
     "errors",
     "idiomatic",
-    "iterators", "logging",
+    "iterators", "logging", "multithreading",
     "testing",
     "trait",
 ]
