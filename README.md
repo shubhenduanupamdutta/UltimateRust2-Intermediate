@@ -177,3 +177,5 @@ You can publish your crate to `crates.io`, rust communities, package registry. *
 - ### [Logging](./logging/Logging.md)
 
 - ### [Multithreading](./multithreading/Multithreading.md)
+
+- ### [Channels](./multithreading/Channels.md)
