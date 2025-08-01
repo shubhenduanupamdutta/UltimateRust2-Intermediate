@@ -26,7 +26,7 @@ fn main() {
     let handle = thread::spawn(move || expensive_sum(my_vector));
 
     // While the child thread is running, the main thread will also do some work
-    for letter in vec!["a", "b", "c", "d", "e", "f"] {
+    for letter in ["a", "b", "c", "d", "e", "f"] {
         println!("Main thread: Processing the letter '{}'", letter);
         sleep_ms(200);
     }
@@ -95,5 +95,30 @@ fn main() {
     // On the child threads print out the values you receive. Close the sending side in the main
     // thread by calling `drop(tx)` (assuming you named your sender channel variable `tx`). Join
     // the child threads.
+    let (tx1, rx1) = channel::unbounded();
+    let rx2 = rx1.clone();
+
+    let handle_a = thread::spawn(move || {
+        for value in rx2 {
+            println!("Child A received: {}", value);
+        }
+    });
+
+    let handle_b = thread::spawn(move || {
+        for value in rx1 {
+            println!("Child B received: {}", value);
+        }
+    });
+
+    for i in 0..=10 {
+        println!("Main thread: Sending value {}", i);
+        tx1.send(i).unwrap();
+        sleep_ms(100); // Simulate some work
+    }
+
+    drop(tx1); // Close the sending end of the channel
+    let _ = handle_a.join();
+    let _ = handle_b.join();
+
     println!("Main thread: Exiting.")
 }
