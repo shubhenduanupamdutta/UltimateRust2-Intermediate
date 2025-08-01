@@ -9,6 +9,7 @@ repository.workspace = true
 license.workspace = true
 
 [dependencies]
+crossbeam = { workspace = true }
 
 [lints]
 workspace = true

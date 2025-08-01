@@ -63,3 +63,4 @@ thiserror = "2.0.12"
 criterion = { version = "0.7.0", features = ["html_reports"] }
 log = "0.4.27"
 env_logger = "0.11.8"
+crossbeam = "0.8.4"
