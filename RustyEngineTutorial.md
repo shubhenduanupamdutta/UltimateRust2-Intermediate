@@ -330,7 +330,7 @@ Colliders are convex polygons that are used to detect if a collision has happene
 
 ### Colliders are stored in the files, with the same file name and path as the image file uses, but with the `.collider` extension. For example, if you have a sprite image at `assets/sprite/racing/car_red.png`, then the collider file should be at `assets/sprite/racing/car_red.collider`. If a valid collider file exists, it is loaded automatically when the sprite is created. All the assets in the `assets/sprite/racing` folder have colliders, so you can use them without worrying about creating colliders yourself. You only need to set the `collision` field to `true` on the sprite to enable collision detection.
 
-### Let's use rusty engine collider example to create a collider for a new custom sprite.
+### Let's use rusty engine collider example to create a collider for a new custom sprite
 
 ```bash
 cargo install rusty_engine --example collider
@@ -553,7 +553,7 @@ game.audio_manager.play_music(MusicPreset::Classy8Bit, 1.0);
 
 ### Sound Effects
 
-At least dozen sound effects can be played concurrently. Exact number is dependent on the hardware you have access to. Sound effects are played in _fire and forget_ manner. Each sound effect will play in a separate channel if available, and terminate when they reach the end of the audio file. 
+At least dozen sound effects can be played concurrently. Exact number is dependent on the hardware you have access to. Sound effects are played in _fire and forget_ manner. Each sound effect will play in a separate channel if available, and terminate when they reach the end of the audio file.
 
 `play_sfx` method is used to play sound effects. It takes a `SfxPreset` enum value or a custom path to the sound effect file. You can also set the volume of the sound effect. 0.0 is silent, 1.0 is full volume.
 
@@ -562,3 +562,42 @@ There is no way to interact with the sound effect once it has started. Sound eff
 ```rust
 game.audio_manager.play_sfx(SfxPreset::Minimize2, 0.5);
 ```
+
+---
+
+## Timer
+
+---
+
+Rusty Engine exports Bevy's `Timer` struct. Timers are super cheap, performance wise. Feel free to use and throw them as much as you like. In our case, we will use a `spawn_timer` to spawn ferris repeatedly at some time interval.
+
+```rust
+spawn_timer:Timer::from_seconds(1.0, TimerMode::Repeating),
+```
+
+You need to tick a timer for it to countdown. If you don't tick it, effectively it is paused.
+
+```rust
+if game_state.spawn_timer.tick(engine.delta).just_finished() {}
+```
+
+`just_finished` method will return `true` if the timer has finished counting down. You can use this to spawn a new ferris sprite at a random location on the screen.
+
+```rust
+if game_state.spawn_timer.tick(engine.delta).just_finished() {
+        let label = format!("ferris_{}", game_state.ferris_index);
+        game_state.ferris_index += 1;
+        let ferris = engine.add_sprite(label, ferris_sprite.clone());
+        ferris.translation.x = rng().random_range(-550.0..550.0);
+        ferris.translation.y = rng().random_range(-325.0..325.0);
+        ferris.scale = 0.5;
+        ferris.collision = true;
+    }
+```
+
+---
+
+## Engine & Game
+
+---
+We already know that `Engine` parameter passed to game logic is a mutable reference to the `Engine` struct

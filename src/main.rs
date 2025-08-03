@@ -1,6 +1,7 @@
 use std::path::PathBuf;
 use std::sync::LazyLock;
 
+use rand::{rng, Rng};
 use rusty_engine::prelude::*;
 
 const ASSETS: LazyLock<PathBuf> = LazyLock::new(|| PathBuf::from("./assets"));
@@ -10,7 +11,7 @@ struct GameState {
     high_score: u32,
     score: u32,
     ferris_index: i32,
-    // spawn_timer: Timer,
+    spawn_timer: Timer,
 }
 
 impl Default for GameState {
@@ -19,7 +20,7 @@ impl Default for GameState {
             high_score: 0,
             score: 0,
             ferris_index: 0,
-            // spawn_timer: Timer::from_seconds(10.0, TimerMode::Once),
+            spawn_timer: Timer::from_seconds(2.0, TimerMode::Repeating),
         }
     }
 }
@@ -108,11 +109,22 @@ fn game_logic(engine: &mut Engine, game_state: &mut GameState) {
         if let Some(mouse_location) = engine.mouse_state.location() {
             let label = format!("ferris_{}", game_state.ferris_index);
             game_state.ferris_index += 1;
-            let ferris = engine.add_sprite(label, ferris_sprite);
+            let ferris = engine.add_sprite(label, ferris_sprite.clone());
             ferris.translation = mouse_location;
             ferris.scale = 0.5;
             ferris.collision = true;
         }
+    }
+
+    // Timer for spawning Ferris sprites
+    if game_state.spawn_timer.tick(engine.delta).just_finished() {
+        let label = format!("ferris_{}", game_state.ferris_index);
+        game_state.ferris_index += 1;
+        let ferris = engine.add_sprite(label, ferris_sprite.clone());
+        ferris.translation.x = rng().random_range(-550.0..550.0);
+        ferris.translation.y = rng().random_range(-325.0..325.0);
+        ferris.scale = 0.5;
+        ferris.collision = true;
     }
 
     // Reset score
