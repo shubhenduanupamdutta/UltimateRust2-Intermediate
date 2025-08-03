@@ -328,7 +328,7 @@ fn game_logic(engine: &mut Engine, state: &mut GameState) {
 
 Colliders are convex polygons that are used to detect if a collision has happened between two sprites. Colliders will be rendered as polygons with white lines, if `engine.show_colliders` is set to `true`. This is useful for debugging purposes, so you can see the colliders of your sprites.
 
-### Colliders are stored in the files, with the same file name and path as the image file uses, but with the `.collider` extension. For example, if you have a sprite image at `assets/sprite/racing/car_red.png`, then the collider file should be at `assets/sprite/racing/car_red.collider`. If a valid collider file exists, it is loaded automatically when the sprite is created. All the assets in the `assets/sprite/racing` folder have colliders, so you can use them without worrying about creating colliders yourself. You only need to set the `collision` field to `true` on the sprite to enable collision detection.
+### Colliders are stored in the files, with the same file name and path as the image file uses, but with the `.collider` extension. For example, if you have a sprite image at `assets/sprite/racing/car_red.png`, then the collider file should be at `assets/sprite/racing/car_red.collider`. If a valid collider file exists, it is loaded automatically when the sprite is created. All the assets in the `assets/sprite/racing` folder have colliders, so you can use them without worrying about creating colliders yourself. You only need to set the `collision` field to `true` on the sprite to enable collision detection
 
 ### Let's use rusty engine collider example to create a collider for a new custom sprite
 
@@ -640,3 +640,41 @@ game.window_settings(Window {
     ..Default::default()
 })
 ```
+
+---
+
+## Game Walkthrough - Common Setup
+
+---
+
+There are few things which are common to any game scenario project.
+
+1. **Add the `rusty_engine` dependency to your `Cargo.toml` file:**
+
+   ```toml
+   [dependencies]
+   rusty_engine = "6.0.0"
+   ```
+
+2. **Download the asset pack:** This will contain all the necessary assets (static) for the tutorial. You can find it in the [Rusty Engine Repo](https://github.com/CleanCut/rusty_engine).
+
+3. **You can copy paste the skeleton code below to your `main.rs` file:**
+
+   ```rust
+   use rusty_engine::prelude::*;
+
+   #[derive(Resource)]
+   struct GameState {
+       health_left: i32,
+   }
+
+   fn main() {
+       let mut game = Game::new();
+
+       // get your game stuff ready here
+
+       game.run(GameState { health_left: 42 });
+   }
+   ```
+
+4. **Run your game with `cargo run --release` command.** This will compile your dependencies, you will have to do this only once, unless you change your dependencies or the code itself.
