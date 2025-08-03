@@ -4,7 +4,10 @@ members = [
     "documentation",
     "errors",
     "idiomatic",
-    "iterators", "logging", "multithreading",
+    "iterators",
+    "logging",
+    "multithreading",
+    "rusty-engine-tutorial",
     "testing",
     "trait",
 ]
