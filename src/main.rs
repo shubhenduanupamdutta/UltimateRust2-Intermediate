@@ -24,7 +24,6 @@ impl Default for GameState {
     }
 }
 
-
 fn main() {
     // Initialize the engine
     let mut game = Game::new();
@@ -48,7 +47,7 @@ fn main() {
     game.run(GameState::default());
 }
 
-fn game_logic(engine: &mut Engine, state: &mut GameState) {
+fn game_logic(engine: &mut Engine, game_state: &mut GameState) {
     // Handle Collision Events
     for event in engine.collision_events.drain(..) {
         if event.state == CollisionState::Begin && event.pair.one_starts_with("player") {
@@ -59,8 +58,15 @@ fn game_logic(engine: &mut Engine, state: &mut GameState) {
                 }
                 // println!("Collision detected: {:#?}", event);
             }
-            state.score += 1;
-            println!("Current Score: {}", state.score);
+            game_state.score += 1;
+            let score = engine.texts.get_mut("score").unwrap();
+            score.value = format!("Current Score: {}", game_state.score);
+
+            if game_state.score > game_state.high_score {
+                game_state.high_score = game_state.score;
+            }
+            let high_score = engine.texts.get_mut("high_score").unwrap();
+            high_score.value = format!("High Score: {}", game_state.high_score);
         }
     }
 
@@ -97,11 +103,19 @@ fn game_logic(engine: &mut Engine, state: &mut GameState) {
     let ferris_sprite = ASSETS.join("happy_ferris.png").canonicalize().unwrap();
     if engine.mouse_state.just_pressed(MouseButton::Left) {
         if let Some(mouse_location) = engine.mouse_state.location() {
-            let label = format!("ferris_{}", state.ferris_index);
-            state.ferris_index += 1;
+            let label = format!("ferris_{}", game_state.ferris_index);
+            game_state.ferris_index += 1;
             let ferris = engine.add_sprite(label, ferris_sprite);
             ferris.translation = mouse_location;
+            ferris.scale = 0.5;
             ferris.collision = true;
         }
+    }
+
+    // Reset score
+    if engine.keyboard_state.just_pressed(KeyCode::R) {
+        game_state.score = 0;
+        let score = engine.texts.get_mut("score").unwrap();
+        score.value = format!("Current Score: {}", game_state.score);
     }
 }
