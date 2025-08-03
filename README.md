@@ -222,7 +222,3 @@ In Rust, there is three times when it is idiomatic to use `*` for use statements
 - ### [Channels](./multithreading/Channels.md)
 
 - ### [Rusty Engine Tutorial](./rusty-engine-tutorial/RustyEngineTutorial.md)
-
-```
-
-```
