@@ -531,3 +531,34 @@ fn game_logic(engine: &mut Engine, game_state: &mut GameState) {
 }
 ```
 
+---
+
+## Audio
+
+---
+
+Rusty Engine has a basic audio system. You can play one looping music track and quite a few concurrent sound effects. There is some music and sound effects preset available in asset pack. You can play your own sound track in _.ogg_, _.mp3_, _flac_ or _wav_ format. You can also use the presets provided in the asset pack.
+
+### Music
+
+All audio is is accessed through `audio_manager` that is stored inside the `Engine` struct. As with other engine features, you can access it through the `Game` struct as well.
+
+You can play looping music with `play_music` method, which takes a `MusicPreset` enum value or a custom path to the music file. You can also set the volume of the music track. 0.0 is silent, 1.0 is full volume.
+
+You can stop the music with `stop_music` method. You can start a different music track.
+
+```rust
+game.audio_manager.play_music(MusicPreset::Classy8Bit, 1.0);
+```
+
+### Sound Effects
+
+At least dozen sound effects can be played concurrently. Exact number is dependent on the hardware you have access to. Sound effects are played in _fire and forget_ manner. Each sound effect will play in a separate channel if available, and terminate when they reach the end of the audio file. 
+
+`play_sfx` method is used to play sound effects. It takes a `SfxPreset` enum value or a custom path to the sound effect file. You can also set the volume of the sound effect. 0.0 is silent, 1.0 is full volume.
+
+There is no way to interact with the sound effect once it has started. Sound effects are meant to be quick and short.
+
+```rust
+game.audio_manager.play_sfx(SfxPreset::Minimize2, 0.5);
+```
