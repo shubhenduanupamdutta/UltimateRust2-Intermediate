@@ -160,6 +160,47 @@ You can publish your crate to `crates.io`, rust communities, package registry. *
 
 ---
 
+## When if every it is idiomatic to use `*` for use statements?
+
+---
+
+In Rust, there is three times when it is idiomatic to use `*` for use statements:
+
+1. When you are using inside a test module (unit tests) then you can use `use super::*;` to bring all items from the parent module into scope.
+
+   ```rust
+   #[cfg(test)]
+   mod tests {
+       use super::*;
+
+       #[test]
+       fn test_puzzle_creation() {
+           let puzzle = Puzzle::new();
+           assert_eq!(puzzle.num_pieces, PUZZLE_PIECES);
+       }
+   }
+   ```
+
+2. When you want to import enums fields of a enum containing many variants, then you can use `use crate::enums::*;` to bring all items from the enum into scope.
+
+   ```rust
+   use crate::SomeEnum::*;
+
+   match some_enum {
+       Variant1 => { /* do something */ },
+       Variant2 => { /* do something else */ },
+       _ => { /* handle other variants */ },
+   }
+   ```
+
+3. When importing prelude from any imported crate, then you can use `use crate::prelude::*;` to bring all items from the prelude into scope.
+
+   ```rust
+   use crate::prelude::*;
+   ```
+
+---
+
 ## Links to other documentation
 
 - ### [Iterators](./iterators/Iterators.md)
@@ -179,3 +220,9 @@ You can publish your crate to `crates.io`, rust communities, package registry. *
 - ### [Multithreading](./multithreading/Multithreading.md)
 
 - ### [Channels](./multithreading/Channels.md)
+
+- ### [Rusty Engine Tutorial](./rusty-engine-tutorial/RustyEngineTutorial.md)
+
+```
+
+```
