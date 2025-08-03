@@ -4,7 +4,7 @@ use std::sync::LazyLock;
 use rand::{rng, Rng};
 use rusty_engine::prelude::*;
 
-const ASSETS: LazyLock<PathBuf> = LazyLock::new(|| PathBuf::from("./assets"));
+static ASSETS: LazyLock<PathBuf> = LazyLock::new(|| PathBuf::from("./assets"));
 
 #[derive(Resource)]
 struct GameState {

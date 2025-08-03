@@ -132,7 +132,7 @@ fn main() {
 
 **A Game is divided into frames. A frame is one run through your game logic to produce one image to be displayed on the screen. On most hardware you will get about 60 frames per second. Rusty engine tries to run your game logic function once each frame.**
 
-You can name your game logic function whatever you want. First parameter will always be a mutable reference to an engine. Second parameter will always be a mutable reference to a game state. Game state is the struct you defined earlier, which holds the data for your game. If you don't have a game state struct, you can use `()` as the second parameter. Then inside you define your game logic. Then you can register your game logic function with the engine. You can have multiple game logic funtions, but you need to register them with the engine.
+You can name your game logic function whatever you want. First parameter will always be a mutable reference to an engine. Second parameter will always be a mutable reference to a game state. Game state is the struct you defined earlier, which holds the data for your game. If you don't have a game state struct, you can use `()` as the second parameter. Then inside you define your game logic. Then you can register your game logic function with the engine. You can have multiple game logic functions, but you need to register them with the engine.
 Logics will be run in the order they are registered, so you can control the order of execution by the order of registration.
 
 ```rust
