@@ -27,7 +27,7 @@ fn main() {
 
     // Setup game
     let assets = PathBuf::from("./assets");
-    let sprites_folder= assets.join("sprite");
+    let sprites_folder = assets.join("sprite");
     let audio_folder = assets.join("audio");
     let fonts_folder = assets.join("fonts");
     let racing_assets = sprites_folder.join("racing");
@@ -55,7 +55,9 @@ fn main() {
 }
 
 fn game_logic(engine: &mut Engine, state: &mut GameState) {
-    engine.show_colliders = true;
+    // engine.show_colliders = true;
+
+    // Handle Collision Events
     for event in engine.collision_events.drain(..) {
         if event.state == CollisionState::Begin && event.pair.one_starts_with("player") {
             // Remove the sprite that player collided with
@@ -71,7 +73,32 @@ fn game_logic(engine: &mut Engine, state: &mut GameState) {
         println!("Current Score: {}", state.current_score);
     }
 
-
+    // Handle Movement with Input
     let player = engine.sprites.get_mut("player").unwrap();
-    player.translation.x += 100.0 * engine.delta_f32;
+
+    const MOVEMENT_SPEED: f32 = 100.0;
+    if engine
+        .keyboard_state
+        .pressed_any(&[KeyCode::Up, KeyCode::W])
+    {
+        player.translation.y += MOVEMENT_SPEED * engine.delta_f32;
+    };
+    if engine
+        .keyboard_state
+        .pressed_any(&[KeyCode::Down, KeyCode::S])
+    {
+        player.translation.y -= MOVEMENT_SPEED * engine.delta_f32;
+    };
+    if engine
+        .keyboard_state
+        .pressed_any(&[KeyCode::Left, KeyCode::A])
+    {
+        player.translation.x -= MOVEMENT_SPEED * engine.delta_f32;
+    };
+    if engine
+        .keyboard_state
+        .pressed_any(&[KeyCode::Right, KeyCode::D])
+    {
+        player.translation.x += MOVEMENT_SPEED * engine.delta_f32;
+    };
 }

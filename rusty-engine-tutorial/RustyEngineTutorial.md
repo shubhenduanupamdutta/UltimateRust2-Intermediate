@@ -333,18 +333,60 @@ Colliders are convex polygons that are used to detect if a collision has happene
 ### Let's use rusty engine collider example to create a collider for a new custom sprite.
 
 ```bash
-cargo install rusty-engine --example collider
+cargo install rusty_engine --example collider
 ```
 
-You need to install the `rusty-engine` crate with the `collider` example. This will give you a GUI for creating colliders for your sprite. You need to follow instructions in the terminal to create a collider for your sprite. You can use the mouse to draw the collider shape, and then save it to a file with the same name as your sprite image, but with the `.collider` extension.
+You need to install the `rusty_engine` crate with the `collider` example. This will give you a GUI for creating colliders for your sprite. You need to follow instructions in the terminal to create a collider for your sprite. You can use the mouse to draw the collider shape, and then save it to a file with the same name as your sprite image, but with the `.collider` extension.
 
 ---
 
 ## Keyboard Input
 
 ---
+
 ### Keyboard State
 
 You can think of `KeyboardState` as a snapshot of the state of keyboard at the start of each frame. It contains information about which keys are pressed, released or held down. You can use this information to control your game logic.
+
+```rust
+// Inside game_logic function
+// Handle Movement with Input
+let player = engine.sprites.get_mut("player").unwrap();
+
+const MOVEMENT_SPEED: f32 = 100.0;
+if engine
+    .keyboard_state
+    .pressed_any(&[KeyCode::Up, KeyCode::W])
+{
+    player.translation.y += MOVEMENT_SPEED * engine.delta_f32; // Move player up
+};
+if engine
+    .keyboard_state
+    .pressed_any(&[KeyCode::Down, KeyCode::S])
+{
+    player.translation.y -= MOVEMENT_SPEED * engine.delta_f32; // Move player down
+};
+if engine
+    .keyboard_state
+    .pressed_any(&[KeyCode::Left, KeyCode::A])
+{
+    player.translation.x -= MOVEMENT_SPEED * engine.delta_f32; // Move player left
+};
+if engine
+    .keyboard_state
+    .pressed_any(&[KeyCode::Right, KeyCode::D])
+{
+    player.translation.x += MOVEMENT_SPEED * engine.delta_f32; // Move player right
+};
+```
+
+---
+
+## Mouse Input
+
+---
+
+### Mouse State
+You can think of `MouseState` as a snapshot of the state of mouse at the start of each frame. It contains information about the position of the mouse, which buttons are pressed, released or held down. You can use this information to control your game logic.
 
 ```rust
