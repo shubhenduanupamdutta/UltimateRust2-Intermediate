@@ -29,6 +29,11 @@ fn main() {
     // Initialize the engine
     let mut game = Game::new();
 
+    game.window_settings(Window {
+        title: "Tutorial!".to_string(),
+        ..Default::default()
+    });
+
     game.audio_manager.play_music(MusicPreset::Classy8Bit, 0.3);
 
     let player = game.add_sprite("player", SpritePreset::RacingCarRed);
@@ -51,6 +56,22 @@ fn main() {
 }
 
 fn game_logic(engine: &mut Engine, game_state: &mut GameState) {
+    // Quit if Q is pressed
+    if engine.keyboard_state.just_pressed(KeyCode::Q) {
+        engine.should_exit = true;
+    };
+
+    // Keep the text near the edge of the screen, no matter how we resize the window
+    let offset = ((engine.time_since_startup_f64 * 3.0).cos() * 5.0) as f32;
+
+    let score = engine.texts.get_mut("score").unwrap();
+    score.translation.x = engine.window_dimensions.x / 2.0 - 80.0;
+    score.translation.y = engine.window_dimensions.y / 2.0 - 30.0 + offset;
+
+    let high_score = engine.texts.get_mut("high_score").unwrap();
+    high_score.translation.x = -engine.window_dimensions.x / 2.0 + 100.0;
+    high_score.translation.y = engine.window_dimensions.y / 2.0 - 30.0;
+
     // Handle Collision Events
     for event in engine.collision_events.drain(..) {
         if event.state == CollisionState::Begin && event.pair.one_starts_with("player") {
@@ -63,7 +84,7 @@ fn game_logic(engine: &mut Engine, game_state: &mut GameState) {
             }
             game_state.score += 1;
             let score = engine.texts.get_mut("score").unwrap();
-            score.value = format!("Current Score: {}", game_state.score);
+            score.value = format!("Score: {}", game_state.score);
 
             if game_state.score > game_state.high_score {
                 game_state.high_score = game_state.score;

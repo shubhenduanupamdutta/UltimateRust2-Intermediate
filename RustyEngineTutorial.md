@@ -600,4 +600,43 @@ if game_state.spawn_timer.tick(engine.delta).just_finished() {
 ## Engine & Game
 
 ---
-We already know that `Engine` parameter passed to game logic is a mutable reference to the `Engine` struct
+
+### Engine
+
+We already know that `Engine` parameter passed to game logic is a mutable reference to the `Engine` struct. There are three more important things we need to talk about..
+
+**1. `should_exit`:** This is a boolean field, which can be set to `true` to cause Rust Engine to cleanly exit at end of the frame. Rusty Engine exits on pressing `ESC` key or pressing on close button on the window. You can make it exit using any key you like using `should_exit` field.
+
+**2. `window_dimensions`:** This is a `Vec2` that contains the width and height of the window in logical pixels. You can use this to center your sprites on the screen or to position them relative to the window size.
+
+**3. `time_since_startup_f64`:** This is a `f64` that contains the time since the engine started in seconds. You can use this to measure how long the game has been running or to create timers. This is a useful for periodic events that need to happen after a certain amount of time has passed. You can take a sine/cosine of this value to create a smooth oscillation effect, or use it to create a timer that triggers an event after a certain amount of time has passed.
+
+```rust
+// Inside game_logic function
+    // Quit if Q is pressed
+    if engine.keyboard_state.just_pressed(KeyCode::Q) {
+        engine.should_exit = true;
+    };
+
+    // Keep the text near the edge of the screen, no matter how we resize the window
+    let offset = ((engine.time_since_startup_f64 * 3.0).cos() * 5.0) as f32;
+
+    let score = engine.texts.get_mut("score").unwrap();
+    score.translation.x = engine.window_dimensions.x / 2.0 - 80.0;
+    score.translation.y = engine.window_dimensions.y / 2.0 - 30.0 + offset;
+
+    let high_score = engine.texts.get_mut("high_score").unwrap();
+    high_score.translation.x = -engine.window_dimensions.x / 2.0 + 100.0;
+    high_score.translation.y = engine.window_dimensions.y / 2.0 - 30.0;
+```
+
+### Game
+
+The `Game` has a unique property to set window settings, which uses the `WindowDescriptor` struct straight from Bevy. You can set the title, width, height and other properties of the window.
+
+```rust
+game.window_settings(Window {
+    title: "Tutorial!".to_string(),
+    ..Default::default()
+})
+```
