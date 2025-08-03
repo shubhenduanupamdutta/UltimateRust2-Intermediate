@@ -48,17 +48,17 @@ all = "deny"
 [profile.dev.package."*"]
 opt-level = 3
 
-[profile.release]
-codegen-units = 1
-lto = true
-panic = "abort"
-incremental = true
-opt-level = 3
-strip = true
-rpath = false
-debug = false
-debug-assertions = false
-overflow-checks = false
+# [profile.release]
+# codegen-units = 16  # Use larger codegen units for faster compilation
+# lto = true
+# panic = "abort"
+# # incremental = true    # Uncomment for incremental compilation
+# opt-level = 3
+# strip = true
+# rpath = false
+# debug = false
+# debug-assertions = false
+# overflow-checks = false
 
 [workspace.dependencies]
 anyhow = "1.0.98"

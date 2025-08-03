@@ -37,6 +37,8 @@ your_project/
 ├── assets/
 ```
 
+If you are in workspace, better go with 'string' representation of the path. There is some conflict with the default path. You need to move `assets` folder to the root of your workspace, so it is at the same level as your root `Cargo.toml` file.
+
 ### What is in the assets folder?
 
 - We have **audio** including music (looping) and sound effects (once).
@@ -48,3 +50,301 @@ your_project/
 ## Engine Initialization
 
 ---
+
+Rusty Engine has a prelude that you can use to import all the necessary items from the engine. This is a good practice to keep your code clean and organized.
+
+Then you will create a game object, which needs to be mutable, because it has state which will change, and you need to keep track of that state.
+
+Then you setup your game, and finally you run the game. To run the game, you will call the `run` method with a game state. (More about game state in next sections.)
+
+```rust
+use rusty_engine::prelude::*;
+
+fn main() {
+    let mut game = Game::new();
+
+    // Setup game here
+
+    // Run the game
+    game.run(());
+}
+```
+
+---
+
+## Game State
+
+---
+
+You will need somewhere to store the data for your game, which is not part of the engine, but that you need access to for more than a single frame. This somewhere, is your game state. Usually, in Rust, we use a struct (let's say `GameState`) to hold the data for your game. Some example of game state you want to include are:
+
+1. Player Attributes such as: _Player's Name_, _Color_, _Health_,
+2. Game Attributes such as: _Score_, _Who is winning_, _Time_, _Day or Night_
+3. Timers such as: _For animation_, _For spawning events_
+4. Sprite Labels: _A Vector of labels for obstacles_, _A vector of enemies_, _A vector of texts_.
+
+There can be only one game state per game, so we can name it `GameState`.
+
+```rust
+use rusty_engine::prelude::*;
+
+#[derive(Resource)]
+struct GameState {
+    high_score: u32,
+    current_score: u32,
+    enemy_label: Vec<String>,
+    spawn_timer: Timer,
+}
+```
+
+When we start the game with `game.run()`, we need to pass an initial value of the game state. I could make a literal state of game state, or I can define a associated function on the `GameState` struct to create a new instance of it.
+
+Let's implement a `Default` trait for `GameState`, which will allow us to create a new instance of it with default values.
+
+```rust
+impl Default for GameState {
+    fn default() -> Self {
+        Self {
+            high_score: 0,
+            current_score: 0,
+            enemy_label: Vec::new(),
+            spawn_timer: Timer::from_seconds(1.0, false),
+        }
+    }
+}
+
+// Then pass it to the `run` method
+fn main() {
+    let mut game = Game::new();
+
+    // Setup game here
+
+    // Run the game with default game state
+    game.run(GameState::default());
+}
+```
+
+---
+
+## Game Logic Function
+
+---
+
+**A Game is divided into frames. A frame is one run through your game logic to produce one image to be displayed on the screen. On most hardware you will get about 60 frames per second. Rusty engine tries to run your game logic function once each frame.**
+
+You can name your game logic function whatever you want. First parameter will always be a mutable reference to an engine. Second parameter will always be a mutable reference to a game state. Game state is the struct you defined earlier, which holds the data for your game. If you don't have a game state struct, you can use `()` as the second parameter. Then inside you define your game logic. Then you can register your game logic function with the engine. You can have multiple game logic funtions, but you need to register them with the engine.
+Logics will be run in the order they are registered, so you can control the order of execution by the order of registration.
+
+```rust
+
+fn main() {
+    let mut game = Game::new();
+
+    // Setup game here
+    game.add_logic(game_logic);
+
+    // Run the game with default game state
+    game.run(GameState::default());
+}
+
+fn game_logic(engine: &mut Engine, game_state: &mut GameState) {
+    game_state.current_score += 1; // Increment score each frame
+}
+```
+
+---
+
+## Sprites
+
+---
+
+A sprite in rusty engine is a 2D image, its transform (translation, rotation and scale), its collider (if it has one) and other associated metadata. You will use sprites for all the graphics in your game. Many sprites will represent a theme.
+
+![race-car sprite](assets/sprite/racing/car_red.png)
+
+For example, a race-car sprite may represent a players character in the game.
+
+Sprites are created through the `Engine` struct. Game struct has passthrough methods (passthrough methods are methods that call the same method on the engine), for all the methods on the engine struct. So any method you like to call on `Engine` you can call on `Game`. So you can use the game struct to create sprites.
+
+```rust
+fn main() {
+    let mut game = Game::new();
+
+    // Setup game here
+    game.add_sprite("player", SpritePreset::RacingCarRed);
+
+    // Run the game with default game state
+    game.run(GameState::default());
+}
+```
+
+To create a sprite, you can use the `add_sprite` method on the `Game` struct, passing in the sprite's name and an image preset (for the image in the assets folder) or a custom image path.
+
+A sprites translation is a `Vec2`, that contains the x & y coordinates of your sprites position on the screen. Coordinate system works just like it works in math. 0 is in center of the screen, positive x is to the right, negative x is to the left, positive y is up and negative y is down.
+
+### Translation
+
+Every increment of 1.0 is one logical pixel on the screen. Hi-DPI screens may have more physical pixels per logical pixel, which is why individual x & y coordinates are specified using `f32` type. Later in the engine we will learn how to check for logical pixel dimension of your window.
+
+Default dimension is 1280x720, if your screen is big enough.
+
+```rust
+fn main() {
+    let mut game = Game::new();
+
+    // Setup game here
+    let player = game.add_sprite("player", SpritePreset::RacingCarRed);
+    player.translation = Vec2::new(200.0, 100.0); // Set player position to (200, 100), top right quadrant
+    player.rotation = std::f32::consts::FRAC_PI_2; // Rotate player 90 degrees counter-clockwise
+    player.scale = 1.2; // Scale player to 120% of its original size
+
+    game.add_logic(game_logic);
+
+    // Run the game with default game state
+    game.run(GameState::default());
+}
+
+fn game_logic(engine: &mut Engine, state: &mut GameState) {
+    // Game logic here
+}
+```
+
+### Rotation
+
+Rotation is in radians. Sprites are always assumed to be facing right (0 radians). Positive rotation is counter-clockwise, negative rotation is clockwise. `pi` radians is 180 degrees, pointing towards left. `2 * pi` radians is 360 degrees (full rotation).
+
+Rusty Engine has constants for common directions like UP, DOWN, LEFT & RIGHT. Also cardinal directions like NORTH, SOUTH, EAST & WEST. NORTH-WEST and so on. You can use these constants to set the rotation of your sprites.
+
+### Scale
+
+Scale defaults to 1.0, which is 100%, anything smaller, shrinks the sprite, anything larger enlarges the sprite.
+
+### Layers
+
+Sprites all default to layer 0.0. Sprite layer will determine the order in which sprite will be rendered, in other words, which sprite will be rendered on top of the others. Greater the layer, higher the sprite will be rendered. So if you want a sprite to be rendered on top of another sprite, you can set its layer to a greater value than the other sprite.
+
+---
+
+## Colliders
+
+---
+
+**Rusty engine has a basic system for detecting collisions between sprites.** _When two sprites with collision enabled begin or end overlapping_, a collision event will be produced. By default collisions are disabled for sprites, so you need to set sprites collision to true, if you want them to emit collision events.
+
+```rust
+fn main() {
+    let mut game = Game::new();
+
+    let player = game.add_sprite("player", SpritePreset::RacingCarRed);
+    player.translation = Vec2::new(0.0, 0.0);
+    player.rotation = SOUTH_WEST;
+    player.scale = 1.0;
+    player.collision = true; // Enable collision for this sprite
+
+    let car1 = game.add_sprite("car1", SpritePreset::RacingCarYellow);
+    car1.translation = Vec2::new(300.0, 0.0);
+    car1.collision = true; // Enable collision for this sprite
+
+    game.add_logic(game_logic);
+
+    // Run the game with default game state
+    game.run(GameState::default());
+}
+
+fn game_logic(engine: &mut Engine, state: &mut GameState) {
+    let player = engine.sprites.get_mut("player").unwrap();
+    for event in engine.collision_events.drain(..) {
+        println!("{:#?}", event);
+    }
+
+    player.translation.x += 100.0 * engine.delta_f32;
+}
+```
+
+Let's look at the debug representation of collision event:
+
+```bash
+Collision detected: CollisionEvent {
+    state: Begin,
+    pair: CollisionPair(
+        "player",
+        "car1",
+    ),
+}
+Collision detected: CollisionEvent {
+    state: End,
+    pair: CollisionPair(
+        "player",
+        "car1",
+    ),
+}
+```
+
+The `CollisionEvent` has a `state` field, which can be either `Begin` or `End`. The `pair` field contains the names of the two sprites that are colliding. You can use this information to handle collisions in your game logic. Order of `CollisionPair` is non-deterministic, so you should not rely on the order of the sprites in the pair. You can use the `state` field to determine if the collision is starting or ending.
+
+```rust
+fn main() {
+    // Initialize the engine
+    let mut game = Game::new();
+
+    // Setup game
+    let racing_assets = PathBuf::from("./assets/sprite/racing");
+
+    // Player
+    let player_car = racing_assets.join("car_red.png").canonicalize().unwrap();
+
+    let player = game.add_sprite("player", player_car);
+    player.translation = Vec2::new(0.0, 0.0);
+    player.rotation = SOUTH_WEST;
+    player.scale = 1.0;
+    player.collision = true;
+
+    // Car
+    let car1 = racing_assets.join("car_yellow.png").canonicalize().unwrap();
+    let car1 = game.add_sprite("car1", car1);
+    car1.translation = Vec2::new(300.0, 0.0);
+    car1.collision = true;
+
+    // Game Logic
+    game.add_logic(game_logic);
+
+    // Start the game loop
+    game.run(GameState::default());
+}
+
+fn game_logic(engine: &mut Engine, state: &mut GameState) {
+    for event in engine.collision_events.drain(..) {
+
+        println!("Collision detected: {:#?}", event);
+        state.current_score += 1;
+        println!("Current Score: {}", state.current_score);
+    }
+
+
+    let player = engine.sprites.get_mut("player").unwrap();
+    player.translation.x += 100.0 * engine.delta_f32;
+}
+```
+
+Colliders are convex polygons that are used to detect if a collision has happened between two sprites. Colliders will be rendered as polygons with white lines, if `engine.show_colliders` is set to `true`. This is useful for debugging purposes, so you can see the colliders of your sprites.
+
+### Colliders are stored in the files, with the same file name and path as the image file uses, but with the `.collider` extension. For example, if you have a sprite image at `assets/sprite/racing/car_red.png`, then the collider file should be at `assets/sprite/racing/car_red.collider`. If a valid collider file exists, it is loaded automatically when the sprite is created. All the assets in the `assets/sprite/racing` folder have colliders, so you can use them without worrying about creating colliders yourself. You only need to set the `collision` field to `true` on the sprite to enable collision detection.
+
+### Let's use rusty engine collider example to create a collider for a new custom sprite.
+
+```bash
+cargo install rusty-engine --example collider
+```
+
+You need to install the `rusty-engine` crate with the `collider` example. This will give you a GUI for creating colliders for your sprite. You need to follow instructions in the terminal to create a collider for your sprite. You can use the mouse to draw the collider shape, and then save it to a file with the same name as your sprite image, but with the `.collider` extension.
+
+---
+
+## Keyboard Input
+
+---
+### Keyboard State
+
+You can think of `KeyboardState` as a snapshot of the state of keyboard at the start of each frame. It contains information about which keys are pressed, released or held down. You can use this information to control your game logic.
+
+```rust
