@@ -387,6 +387,28 @@ if engine
 ---
 
 ### Mouse State
+
 You can think of `MouseState` as a snapshot of the state of mouse at the start of each frame. It contains information about the position of the mouse, which buttons are pressed, released or held down. You can use this information to control your game logic.
 
 ```rust
+// Handle Mouse input
+let ferris_sprite = ASSETS.join("happy_ferris.png").canonicalize().unwrap();
+if engine.mouse_state.just_pressed(MouseButton::Left) {
+    if let Some(mouse_location) = engine.mouse_state.location() {
+        let label = format!("ferris_{}", state.ferris_index);
+        state.ferris_index += 1;
+        let ferris = engine.add_sprite(label, ferris_sprite);
+        ferris.translation = mouse_location;
+        ferris.collision = true;
+    }
+}
+```
+
+---
+
+## Text
+
+---
+Text in engine is a lot like sprite, it has same set of _translation_, _rotation_, _scale_ and _layer_ fields. It is also placed in same coordinate system as sprites. Text is rendered using a font, which is loaded from the assets folder. You can use any font you like, but it needs to be in the `assets/fonts` folder.
+
+Difference is, instead of having and image and a collider, text is based on a string value combined with a font and font-size. Using text is similar to adding a sprite. Let's look at a code example.

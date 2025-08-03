@@ -1,51 +1,45 @@
 use std::path::PathBuf;
+use std::sync::LazyLock;
 
 use rusty_engine::prelude::*;
+
+const ASSETS: LazyLock<PathBuf> = LazyLock::new(|| PathBuf::from("./assets"));
 
 #[derive(Resource)]
 struct GameState {
     high_score: u32,
-    current_score: u32,
-    enemy_label: Vec<String>,
-    spawn_timer: Timer,
+    score: u32,
+    ferris_index: i32,
+    // spawn_timer: Timer,
 }
 
 impl Default for GameState {
     fn default() -> Self {
         Self {
             high_score: 0,
-            current_score: 0,
-            enemy_label: Vec::new(),
-            spawn_timer: Timer::from_seconds(10.0, TimerMode::Once),
+            score: 0,
+            ferris_index: 0,
+            // spawn_timer: Timer::from_seconds(10.0, TimerMode::Once),
         }
     }
 }
+
 
 fn main() {
     // Initialize the engine
     let mut game = Game::new();
 
-    // Setup game
-    let assets = PathBuf::from("./assets");
-    let sprites_folder = assets.join("sprite");
-    let audio_folder = assets.join("audio");
-    let fonts_folder = assets.join("fonts");
-    let racing_assets = sprites_folder.join("racing");
-
-    // Player
-    let player_car = racing_assets.join("car_red.png").canonicalize().unwrap();
-
-    let player = game.add_sprite("player", player_car);
+    let player = game.add_sprite("player", SpritePreset::RacingCarRed);
     player.translation = Vec2::new(0.0, 0.0);
     player.rotation = SOUTH_WEST;
     player.scale = 1.0;
     player.collision = true;
 
-    // Car
-    let car1 = racing_assets.join("car_yellow.png").canonicalize().unwrap();
-    let car1 = game.add_sprite("car1", car1);
-    car1.translation = Vec2::new(300.0, 0.0);
-    car1.collision = true;
+    let score = game.add_text("score", "Score: 0");
+    score.translation = Vec2::new(520.0, 320.0);
+
+    let high_score = game.add_text("high_score", "High Score: 0");
+    high_score.translation = Vec2::new(-520.0, 320.0);
 
     // Game Logic
     game.add_logic(game_logic);
@@ -55,8 +49,6 @@ fn main() {
 }
 
 fn game_logic(engine: &mut Engine, state: &mut GameState) {
-    // engine.show_colliders = true;
-
     // Handle Collision Events
     for event in engine.collision_events.drain(..) {
         if event.state == CollisionState::Begin && event.pair.one_starts_with("player") {
@@ -65,12 +57,11 @@ fn game_logic(engine: &mut Engine, state: &mut GameState) {
                 if label != "player" {
                     engine.sprites.remove(&label);
                 }
+                // println!("Collision detected: {:#?}", event);
             }
+            state.score += 1;
+            println!("Current Score: {}", state.score);
         }
-
-        // println!("Collision detected: {:#?}", event);
-        state.current_score += 1;
-        println!("Current Score: {}", state.current_score);
     }
 
     // Handle Movement with Input
@@ -101,4 +92,16 @@ fn game_logic(engine: &mut Engine, state: &mut GameState) {
     {
         player.translation.x += MOVEMENT_SPEED * engine.delta_f32;
     };
+
+    // Handle Mouse input
+    let ferris_sprite = ASSETS.join("happy_ferris.png").canonicalize().unwrap();
+    if engine.mouse_state.just_pressed(MouseButton::Left) {
+        if let Some(mouse_location) = engine.mouse_state.location() {
+            let label = format!("ferris_{}", state.ferris_index);
+            state.ferris_index += 1;
+            let ferris = engine.add_sprite(label, ferris_sprite);
+            ferris.translation = mouse_location;
+            ferris.collision = true;
+        }
+    }
 }
